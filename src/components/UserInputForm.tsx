@@ -1,0 +1,171 @@
+import { useState, FormEvent } from 'react';
+import { getCountryList } from '../utils/lifeExpectancyCalculator';
+import type { UserData } from '../types';
+
+interface UserInputFormProps {
+  onSubmit: (data: UserData) => void;
+  initialData?: UserData;
+}
+
+export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
+  const [birthdayString, setBirthdayString] = useState<string>(
+    initialData?.birthday ? initialData.birthday.toISOString().split('T')[0] : ''
+  );
+  const [gender, setGender] = useState<'male' | 'female' | null>(
+    initialData?.gender || null
+  );
+  const [country, setCountry] = useState<string>(initialData?.country || '');
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const countries = getCountryList();
+
+  const validateForm = (): boolean => {
+    const newErrors: { [key: string]: string } = {};
+
+    // Validate birthday
+    if (!birthdayString) {
+      newErrors.birthday = 'Birthday is required';
+    } else {
+      // Parse date in local timezone to avoid UTC conversion issues
+      const [year, month, day] = birthdayString.split('-').map(Number);
+      const birthday = new Date(year, month - 1, day);
+      const now = new Date();
+      const maxAge = 120;
+      const maxAgeDate = new Date();
+      maxAgeDate.setFullYear(maxAgeDate.getFullYear() - maxAge);
+
+      if (birthday > now) {
+        newErrors.birthday = 'Birthday cannot be in the future';
+      } else if (birthday < maxAgeDate) {
+        newErrors.birthday = `Birthday cannot be more than ${maxAge} years ago`;
+      }
+    }
+
+    // Validate gender
+    if (!gender) {
+      newErrors.gender = 'Please select a gender';
+    }
+
+    // Validate country
+    if (!country) {
+      newErrors.country = 'Please select a country';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    // Parse date in local timezone to avoid UTC conversion issues
+    // birthdayString is in format "YYYY-MM-DD"
+    const [year, month, day] = birthdayString.split('-').map(Number);
+    const birthday = new Date(year, month - 1, day); // month is 0-indexed
+
+    onSubmit({
+      birthday,
+      gender,
+      country,
+    });
+  };
+
+  return (
+    <form className="user-input-form" onSubmit={handleSubmit}>
+      <div className="form-header">
+        <h2>Start Your LifeClock</h2>
+        <p>Enter your information to see your time lived and remaining</p>
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="birthday">
+          Date of Birth
+          <span className="required">*</span>
+        </label>
+        <input
+          type="date"
+          id="birthday"
+          value={birthdayString}
+          onChange={(e) => setBirthdayString(e.target.value)}
+          className={errors.birthday ? 'error' : ''}
+          aria-invalid={!!errors.birthday}
+          aria-describedby={errors.birthday ? 'birthday-error' : undefined}
+        />
+        {errors.birthday && (
+          <span id="birthday-error" className="error-message" role="alert">
+            {errors.birthday}
+          </span>
+        )}
+      </div>
+
+      <div className="form-group">
+        <label>
+          Gender
+          <span className="required">*</span>
+        </label>
+        <div className="radio-group">
+          <label className="radio-label">
+            <input
+              type="radio"
+              name="gender"
+              value="male"
+              checked={gender === 'male'}
+              onChange={() => setGender('male')}
+            />
+            <span>Male</span>
+          </label>
+          <label className="radio-label">
+            <input
+              type="radio"
+              name="gender"
+              value="female"
+              checked={gender === 'female'}
+              onChange={() => setGender('female')}
+            />
+            <span>Female</span>
+          </label>
+        </div>
+        {errors.gender && (
+          <span className="error-message" role="alert">
+            {errors.gender}
+          </span>
+        )}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="country">
+          Country
+          <span className="required">*</span>
+        </label>
+        <select
+          id="country"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          className={errors.country ? 'error' : ''}
+          aria-invalid={!!errors.country}
+          aria-describedby={errors.country ? 'country-error' : undefined}
+        >
+          <option value="">Select a country</option>
+          {countries.map((c) => (
+            <option key={c.code} value={c.code}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+        {errors.country && (
+          <span id="country-error" className="error-message" role="alert">
+            {errors.country}
+          </span>
+        )}
+      </div>
+
+      <button type="submit" className="submit-button">
+        {initialData ? 'Update Clock' : 'Start Your LifeClock'}
+      </button>
+    </form>
+  );
+}
