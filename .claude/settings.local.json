@@ -15,7 +15,8 @@
       "Bash(ip:*)",
       "Bash(powershell.exe:*)",
       "Bash(curl:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(git push:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
