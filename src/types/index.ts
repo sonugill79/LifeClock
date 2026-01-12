@@ -10,13 +10,13 @@ export interface TimeLived {
 
 export interface UserData {
   birthday: Date | null;
-  gender: 'male' | 'female' | null;
+  gender: 'male' | 'female' | 'other' | null;
   country: string | null;
 }
 
 export interface StoredUserData {
   birthday: string; // ISO string
-  gender: 'male' | 'female';
+  gender: 'male' | 'female' | 'other';
   country: string; // ISO country code
   lastUpdated: string; // ISO string
 }

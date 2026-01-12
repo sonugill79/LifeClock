@@ -72,9 +72,6 @@ function App() {
 
   return (
     <div className="app">
-      <a href="#main-content" className="skip-nav">
-        Skip to main content
-      </a>
       <header className="app-header">
         <div className="header-content">
           <div className="header-title">

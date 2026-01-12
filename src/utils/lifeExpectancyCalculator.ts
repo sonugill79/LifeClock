@@ -7,17 +7,22 @@ const data: LifeExpectancyData = lifeExpectancyData as LifeExpectancyData;
 /**
  * Get life expectancy for a specific country and gender
  * @param country - ISO 3166-1 alpha-3 country code (e.g., "USA", "GBR", "JPN")
- * @param gender - 'male' or 'female'
+ * @param gender - 'male', 'female', or 'other'
  * @returns Life expectancy in years, or null if not found
  */
 export function getLifeExpectancy(
   country: string,
-  gender: 'male' | 'female'
+  gender: 'male' | 'female' | 'other'
 ): number | null {
   const countryData = data[country];
 
   if (!countryData) {
     return null;
+  }
+
+  // For 'other', use the combined average ('both')
+  if (gender === 'other') {
+    return countryData.both;
   }
 
   return countryData[gender];
@@ -26,12 +31,12 @@ export function getLifeExpectancy(
 /**
  * Get life expectancy with fallback to global average
  * @param country - ISO 3166-1 alpha-3 country code
- * @param gender - 'male' or 'female'
+ * @param gender - 'male', 'female', or 'other'
  * @returns Life expectancy in years (73 if country not found)
  */
 export function getLifeExpectancyWithFallback(
   country: string,
-  gender: 'male' | 'female'
+  gender: 'male' | 'female' | 'other'
 ): number {
   const lifeExpectancy = getLifeExpectancy(country, gender);
 

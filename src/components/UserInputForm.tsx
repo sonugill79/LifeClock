@@ -11,7 +11,7 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
   const [birthdayString, setBirthdayString] = useState<string>(
     initialData?.birthday ? initialData.birthday.toISOString().split('T')[0] : ''
   );
-  const [gender, setGender] = useState<'male' | 'female' | null>(
+  const [gender, setGender] = useState<'male' | 'female' | 'other' | null>(
     initialData?.gender || null
   );
   const [country, setCountry] = useState<string>(initialData?.country || '');
@@ -125,6 +125,10 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
           Gender
           <span className="required">*</span>
         </label>
+        <p className="field-info">
+          Used solely for life expectancy calculation based on WHO statistical data.
+          This data is only available in binary categories and combined averages.
+        </p>
         <div className="radio-group">
           <label className="radio-label">
             <input
@@ -145,6 +149,16 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
               onChange={() => setGender('female')}
             />
             <span>Female</span>
+          </label>
+          <label className="radio-label">
+            <input
+              type="radio"
+              name="gender"
+              value="other"
+              checked={gender === 'other'}
+              onChange={() => setGender('other')}
+            />
+            <span>Other / Prefer not to specify</span>
           </label>
         </div>
         {errors.gender && (
