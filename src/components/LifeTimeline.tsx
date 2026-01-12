@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { TimelineGrid } from './TimelineGrid';
 import { calculateTimelineData, getUnitName } from '../utils/timelineCalculations';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import type { TimelineGranularity, IconStyle } from '../types';
 
 interface LifeTimelineProps {
@@ -10,8 +11,15 @@ interface LifeTimelineProps {
 }
 
 export function LifeTimeline({ birthday, currentTime, lifeExpectancy }: LifeTimelineProps) {
-  const [granularity, setGranularity] = useState<TimelineGranularity>('months');
-  const [iconStyle, setIconStyle] = useState<IconStyle>('squares');
+  // Persist granularity and icon style preferences in localStorage
+  const [granularity, setGranularity] = useLocalStorage<TimelineGranularity>(
+    'lifeclock-timeline-granularity',
+    'years' // Default to years
+  );
+  const [iconStyle, setIconStyle] = useLocalStorage<IconStyle>(
+    'lifeclock-timeline-icon-style',
+    'squares'
+  );
 
   // Calculate timeline data based on current granularity
   const timelineData = useMemo(
