@@ -10,7 +10,12 @@
       "Bash(npx playwright:*)",
       "Bash(node test-timeline.mjs:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(ip:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(curl:*)",
+      "Bash(git checkout:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

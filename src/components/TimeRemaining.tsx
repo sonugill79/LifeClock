@@ -10,7 +10,7 @@ export function TimeRemaining({ time, isOverExpectancy = false }: TimeRemainingP
   if (isOverExpectancy) {
     return (
       <div className="clock-display clock-remaining over-expectancy">
-        <h2 className="clock-label">Time Remaining</h2>
+        <h2 className="clock-label">Time Ahead</h2>
         <div className="clock-content">
           <p className="expectancy-message">
             🎉 Living beyond expectations!
@@ -27,7 +27,7 @@ export function TimeRemaining({ time, isOverExpectancy = false }: TimeRemainingP
   return (
     <ClockDisplay
       time={time}
-      label="Time Remaining"
+      label="Time Ahead"
       variant="remaining"
     />
   );
