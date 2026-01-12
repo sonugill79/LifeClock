@@ -81,6 +81,24 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
         <p>Enter your information to see your time lived and remaining</p>
       </div>
 
+      <div className="privacy-badge">
+        <svg
+          className="privacy-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+        <span>Your data stays private - stored only on your device</span>
+      </div>
+
       <div className="form-group">
         <label htmlFor="birthday">
           Date of Birth

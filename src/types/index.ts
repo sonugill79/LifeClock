@@ -67,3 +67,14 @@ export interface TimelineData {
   layout: GridLayout;
   units: TimelineUnit[];
 }
+
+// Theme system
+export type ThemeName = 'ocean-sunset' | 'neon-dreams' | 'forest-fire' | 'cyber-glow' | 'grape-punch' | 'sunset-glow' | 'electric-storm' | 'tropical-vibes';
+
+export interface ThemeConfig {
+  name: ThemeName;
+  displayName: string;
+  description: string;
+  livedPrimary: string;
+  remainingPrimary: string;
+}

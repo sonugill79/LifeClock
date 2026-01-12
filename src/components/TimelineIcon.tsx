@@ -5,17 +5,22 @@ interface TimelineIconProps {
   iconStyle: IconStyle;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  className?: string;
 }
 
-export function TimelineIcon({ unit, iconStyle, onMouseEnter, onMouseLeave }: TimelineIconProps) {
+export function TimelineIcon({ unit, iconStyle, onMouseEnter, onMouseLeave, className: additionalClassName }: TimelineIconProps) {
   const className = [
     'timeline-icon',
     `icon-style-${iconStyle}`,
     unit.isPreBirth ? 'pre-birth' : (unit.isLived ? 'lived' : 'remaining'),
     unit.isCurrent ? 'current' : '',
+    additionalClassName,
   ]
     .filter(Boolean)
     .join(' ');
+
+  // Stagger animation delay based on index
+  const style = { '--icon-index': unit.index } as React.CSSProperties;
 
   // Unicode style uses text content
   if (iconStyle === 'unicode') {
@@ -23,6 +28,7 @@ export function TimelineIcon({ unit, iconStyle, onMouseEnter, onMouseLeave }: Ti
     return (
       <span
         className={className}
+        style={style}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         aria-label={unit.detailsText}
@@ -36,6 +42,7 @@ export function TimelineIcon({ unit, iconStyle, onMouseEnter, onMouseLeave }: Ti
   return (
     <div
       className={className}
+      style={style}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       aria-label={unit.detailsText}
