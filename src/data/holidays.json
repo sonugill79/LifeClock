@@ -1,3 +1,54 @@
 {
-  "comment": "TODO: Phase 1.2 - Add holiday definitions (fixed and calculated)"
+  "fixed": [
+    {
+      "id": "christmas",
+      "name": "Christmas",
+      "type": "fixed",
+      "date": "12/25"
+    },
+    {
+      "id": "new-years-day",
+      "name": "New Year's Day",
+      "type": "fixed",
+      "date": "01/01"
+    },
+    {
+      "id": "new-years-eve",
+      "name": "New Year's Eve",
+      "type": "fixed",
+      "date": "12/31"
+    },
+    {
+      "id": "independence-day-us",
+      "name": "Independence Day (US)",
+      "type": "fixed",
+      "date": "07/04"
+    },
+    {
+      "id": "valentines-day",
+      "name": "Valentine's Day",
+      "type": "fixed",
+      "date": "02/14"
+    },
+    {
+      "id": "halloween",
+      "name": "Halloween",
+      "type": "fixed",
+      "date": "10/31"
+    }
+  ],
+  "calculated": [
+    {
+      "id": "easter",
+      "name": "Easter",
+      "type": "calculated",
+      "calculateFn": "calculateEaster"
+    },
+    {
+      "id": "thanksgiving-us",
+      "name": "Thanksgiving (US)",
+      "type": "calculated",
+      "calculateFn": "calculateThanksgiving"
+    }
+  ]
 }
