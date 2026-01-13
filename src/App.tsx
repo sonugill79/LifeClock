@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
-import { differenceInYears } from 'date-fns';
+import { differenceInYears, addYears } from 'date-fns';
 import { UserInputForm } from './components/UserInputForm';
 import { TimeLived } from './components/TimeLived';
 import { TimeRemaining } from './components/TimeRemaining';
 import { LifeTimeline } from './components/LifeTimeline';
+import { FutureOutlook } from './components/FutureOutlook';
 import { Settings } from './components/Settings';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useLifeExpectancy } from './hooks/useLifeExpectancy';
@@ -77,6 +78,11 @@ function App() {
     ? userData.birthday.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     : null;
 
+  // Calculate life expectancy date for Future Outlook
+  const lifeExpectancyDate = userData.birthday && lifeExpectancy
+    ? addYears(userData.birthday, lifeExpectancy)
+    : null;
+
   return (
     <div className="app">
       <header className="app-header">
@@ -133,6 +139,14 @@ function App() {
               {timeLived && <TimeLived time={timeLived} />}
               {timeRemaining && <TimeRemaining time={timeRemaining} isOverExpectancy={isOver} />}
             </div>
+
+            {/* Future Outlook - Life Milestones */}
+            {userData.birthday && lifeExpectancyDate && (
+              <FutureOutlook
+                birthDate={userData.birthday}
+                lifeExpectancyDate={lifeExpectancyDate}
+              />
+            )}
 
             {/* Life Timeline Grid */}
             {userData.birthday && lifeExpectancy && (

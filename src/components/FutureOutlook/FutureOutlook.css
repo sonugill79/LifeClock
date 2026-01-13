@@ -7,51 +7,87 @@
  */
 
 .future-outlook {
-  margin-top: 3rem;
-  padding: 2rem;
-  border-top: 2px solid rgba(0, 0, 0, 0.1);
+  margin-top: var(--space-section-gap);
+  padding: var(--space-8);
+  border-top: 1px solid var(--color-border-default);
 }
 
 .future-outlook__header {
   position: relative;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-8);
 }
 
 .future-outlook__title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: var(--color-neutral-800);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-3);
+  color: var(--color-text-strong);
+  letter-spacing: -0.025em;
 }
 
 .future-outlook__tagline {
-  font-size: 1rem;
+  font-size: var(--font-size-lg);
   font-style: italic;
-  color: var(--color-neutral-600);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-subtle);
   margin: 0;
+  margin-top: var(--space-2);
+}
+
+.future-outlook__tagline--animated {
+  animation: fadeInOut 1s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-5px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(5px); }
 }
 
 .future-outlook__config-button {
   position: absolute;
   top: 0;
   right: 0;
-  background: none;
-  border: none;
-  font-size: 24px;
+  width: var(--space-10);
+  height: var(--space-10);
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xl);
   cursor: pointer;
-  padding: 0.5rem;
-  transition: transform 0.2s ease;
+  padding: var(--space-2);
+  transition: all var(--transition-base);
+  color: var(--color-text-subtle);
 }
 
 .future-outlook__config-button:hover {
-  transform: rotate(45deg);
+  background: var(--color-surface-canvas);
+  color: var(--color-text-strong);
+  transform: rotate(90deg);
+  border-color: var(--color-border-strong);
+}
+
+.future-outlook__config-button:active {
+  transform: rotate(90deg) scale(0.95);
+  background: var(--color-action-primary-subtle);
+}
+
+.future-outlook__config-button:focus-visible {
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: 2px;
 }
 
 .future-outlook__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1.5rem;
+  gap: var(--space-6);
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -59,48 +95,107 @@
 /* Celebration message for users over life expectancy */
 .future-outlook__celebration {
   text-align: center;
-  padding: 3rem 1rem;
+  max-width: 600px;
+  margin: var(--space-12) auto;
+  padding: var(--space-8);
+  background: linear-gradient(135deg,
+    var(--color-success-50) 0%,
+    var(--color-success-100) 100%);
+  border: 2px solid var(--color-success-500);
+  border-radius: var(--radius-2xl);
+}
+
+.future-outlook__celebration-icon {
+  font-size: var(--font-size-6xl);
+  margin-bottom: var(--space-4);
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 .future-outlook__celebration-text {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-success-600);
-  margin-bottom: 1rem;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-success-700);
+  margin-bottom: var(--space-3);
 }
 
 .future-outlook__celebration-subtext {
-  font-size: 1.125rem;
-  color: var(--color-neutral-700);
-  font-style: italic;
+  font-size: var(--font-size-lg);
+  color: var(--color-success-600);
+  line-height: var(--line-height-relaxed);
+}
+
+@media (prefers-color-scheme: dark) {
+  .future-outlook__celebration {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--color-success-500);
+  }
+
+  .future-outlook__celebration-text {
+    color: var(--color-success-400);
+  }
+
+  .future-outlook__celebration-subtext {
+    color: var(--color-success-300);
+  }
 }
 
 /* Empty state */
 .future-outlook__empty {
   text-align: center;
-  padding: 3rem 1rem;
+  max-width: 500px;
+  margin: var(--space-12) auto;
+  padding: var(--space-8);
 }
 
-.future-outlook__empty p {
-  margin-bottom: 1.5rem;
-  color: var(--color-neutral-600);
-  font-size: 1.125rem;
+.future-outlook__empty-icon {
+  font-size: var(--font-size-6xl);
+  margin-bottom: var(--space-4);
+}
+
+.future-outlook__empty-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-strong);
+  margin-bottom: var(--space-3);
+}
+
+.future-outlook__empty-description {
+  font-size: var(--font-size-base);
+  color: var(--color-text-subtle);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-6);
 }
 
 .future-outlook__empty-button {
-  padding: 0.75rem 1.5rem;
-  background: var(--color-primary-600);
-  color: white;
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-inverse);
+  background: var(--color-action-primary);
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all var(--transition-fast);
 }
 
 .future-outlook__empty-button:hover {
-  background: var(--color-primary-700);
+  background: var(--color-action-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.future-outlook__empty-button:active {
+  transform: translateY(0);
+}
+
+.future-outlook__empty-button:focus-visible {
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: 2px;
 }
 
 /* Config placeholder (Phase 4) */
@@ -122,17 +217,44 @@
   cursor: pointer;
 }
 
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .future-outlook__config-button:hover {
+    transform: none;
+  }
+
+  .future-outlook__empty-button:hover {
+    transform: none;
+  }
+
+  .future-outlook__celebration-icon {
+    animation: none;
+  }
+
+  .future-outlook__tagline--animated {
+    animation: none;
+  }
+}
+
 @media (max-width: 768px) {
   .future-outlook {
-    padding: 1rem;
+    padding: var(--space-4);
   }
 
   .future-outlook__title {
-    font-size: 1.5rem;
+    font-size: var(--font-size-2xl);
   }
 
   .future-outlook__grid {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 1rem;
+    gap: var(--space-4);
   }
 }

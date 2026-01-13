@@ -343,6 +343,103 @@
   --color-remaining-bg: #fdf2f8;
 }
 
+/* ========================================
+   FUTURE OUTLOOK THEME COLORS
+   ======================================== */
+
+/* Default theme milestone colors */
+:root,
+[data-theme="ocean-sunset"] {
+  --color-milestone-accent-start: var(--color-primary-100);
+  --color-milestone-accent-end: var(--color-primary-200);
+  --color-milestone-bg: var(--color-surface-raised);
+  --color-milestone-text: var(--color-text-default);
+  --color-milestone-count: var(--color-text-strong);
+}
+
+/* Theme-specific milestone colors */
+[data-theme="neon-dreams"] {
+  --color-milestone-accent-start: #fdf2f8;
+  --color-milestone-accent-end: #fce7f3;
+}
+
+[data-theme="forest-fire"] {
+  --color-milestone-accent-start: #ecfdf5;
+  --color-milestone-accent-end: #d1fae5;
+}
+
+[data-theme="cyber-glow"] {
+  --color-milestone-accent-start: #ecfeff;
+  --color-milestone-accent-end: #cffafe;
+}
+
+[data-theme="grape-punch"] {
+  --color-milestone-accent-start: #f5f3ff;
+  --color-milestone-accent-end: #ede9fe;
+}
+
+[data-theme="sunset-glow"] {
+  --color-milestone-accent-start: #fff7ed;
+  --color-milestone-accent-end: #ffedd5;
+}
+
+[data-theme="electric-storm"] {
+  --color-milestone-accent-start: #eef2ff;
+  --color-milestone-accent-end: #e0e7ff;
+}
+
+[data-theme="tropical-vibes"] {
+  --color-milestone-accent-start: #f7fee7;
+  --color-milestone-accent-end: #ecfccb;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  :root,
+  :root[data-theme] {
+    --color-milestone-accent-start: rgba(59, 130, 246, 0.15);
+    --color-milestone-accent-end: rgba(59, 130, 246, 0.25);
+    --color-milestone-bg: var(--color-surface-raised);
+    --color-milestone-text: var(--color-text-default);
+    --color-milestone-count: var(--color-text-strong);
+  }
+
+  [data-theme="neon-dreams"] {
+    --color-milestone-accent-start: rgba(236, 72, 153, 0.15);
+    --color-milestone-accent-end: rgba(236, 72, 153, 0.25);
+  }
+
+  [data-theme="forest-fire"] {
+    --color-milestone-accent-start: rgba(5, 150, 105, 0.15);
+    --color-milestone-accent-end: rgba(5, 150, 105, 0.25);
+  }
+
+  [data-theme="cyber-glow"] {
+    --color-milestone-accent-start: rgba(6, 182, 212, 0.15);
+    --color-milestone-accent-end: rgba(6, 182, 212, 0.25);
+  }
+
+  [data-theme="grape-punch"] {
+    --color-milestone-accent-start: rgba(124, 58, 237, 0.15);
+    --color-milestone-accent-end: rgba(124, 58, 237, 0.25);
+  }
+
+  [data-theme="sunset-glow"] {
+    --color-milestone-accent-start: rgba(249, 115, 22, 0.15);
+    --color-milestone-accent-end: rgba(249, 115, 22, 0.25);
+  }
+
+  [data-theme="electric-storm"] {
+    --color-milestone-accent-start: rgba(99, 102, 241, 0.15);
+    --color-milestone-accent-end: rgba(99, 102, 241, 0.25);
+  }
+
+  [data-theme="tropical-vibes"] {
+    --color-milestone-accent-start: rgba(132, 204, 22, 0.15);
+    --color-milestone-accent-end: rgba(132, 204, 22, 0.25);
+  }
+}
+
 body {
   font-family: var(--font-family-base);
   -webkit-font-smoothing: antialiased;

@@ -32,11 +32,18 @@ npx tsc -b            # Check types without building
 ### Key Files
 - `src/App.tsx`: Main orchestrator, manages data flow between storage/hooks/components
 - `src/types/index.ts`: All TypeScript interfaces (UserData, StoredUserData, TimeLived, TimelineUnit, etc.)
+- `src/types/milestones.ts`: Future Outlook type definitions (Milestone, HolidayDefinition, FutureOutlookData)
 - `src/hooks/useLocalStorage.ts`: Generic localStorage sync hook with cross-tab sync
+- `src/hooks/useMilestones.ts`: Real-time milestone calculations hook
+- `src/hooks/useFutureOutlookStorage.ts`: Future Outlook preferences storage hook
 - `src/utils/timeCalculations.ts`: Core date math (calculateTimeDifference, isOverLifeExpectancy)
+- `src/utils/milestoneCalculations.ts`: All milestone calculation logic (birthdays, seasons, weekends, holidays)
+- `src/utils/holidayCalculations.ts`: Holiday date calculation algorithms (Easter, Thanksgiving)
 - `src/utils/lifeExpectancyCalculator.ts`: Looks up country/gender life expectancy with fallback
 - `src/components/LifeTimeline.tsx`: Main timeline component coordinating grid layout
+- `src/components/FutureOutlook/`: Future Outlook components (FutureOutlook, MilestoneCard, MilestoneConfig)
 - `src/utils/timelineCalculations.ts`: Timeline grid calculations (years/months/weeks granularity)
+- `src/data/holidays.json`: Holiday definitions (fixed and calculated dates)
 
 ### Component Hierarchy
 ```
@@ -45,9 +52,12 @@ App
 └── [Main View]
     ├── TimeLived (wraps ClockDisplay)
     ├── TimeRemaining (wraps ClockDisplay)
-    └── LifeTimeline
-        └── TimelineGrid
-            └── TimelineIcon (repeated for each unit)
+    ├── LifeTimeline
+    │   └── TimelineGrid
+    │       └── TimelineIcon (repeated for each unit)
+    └── FutureOutlook
+        ├── MilestoneCard (repeated for each milestone)
+        └── MilestoneConfig (modal, conditional)
 ```
 
 ### State Management
@@ -57,7 +67,9 @@ App
 - **Cross-tab Sync**: `useLocalStorage` listens to storage events for multi-tab consistency
 
 ### Data Persistence
-- **Storage Key**: `'lifeclock-user-data'`
+- **Storage Keys**:
+  - `'lifeclock-user-data'`: User profile data (birthday, country, gender)
+  - `'lifeclock-future-outlook'`: Future Outlook preferences (selected milestones, holidays)
 - **Format**: JSON with ISO strings (`birthday`, `lastUpdated`)
 - **Privacy**: No backend, no analytics, no external requests
 
@@ -84,6 +96,30 @@ Edit `src/data/lifeExpectancy.json` with WHO data:
   - Weeks: 52 columns (each row = year)
 - **States**: Each unit can be `isLived`, `isCurrent`, or future
 - **Calculations**: `src/utils/timelineCalculations.ts` handles all grid math
+
+### Future Outlook System
+- **Purpose**: Displays life milestones (birthdays, summers, weekends, holidays remaining)
+- **Default Milestones**: Birthdays, Summers, Weekends (user can customize)
+- **Calculation**: Real-time counting of events between current date and life expectancy
+- **Configuration**: User-selectable milestones and holidays via modal interface
+- **Storage**: `lifeclock-future-outlook` localStorage key for preferences
+- **Milestone Types**:
+  - **Seasons**: Summer, Winter, Spring, Fall (Northern Hemisphere dates)
+  - **Birthdays**: Annual birthday occurrences
+  - **Weekends**: Saturday-Sunday pairs
+  - **Holidays**: Fixed dates (Christmas, New Year's) and calculated (Easter, Thanksgiving)
+- **Holiday Calculations**:
+  - Fixed holidays: Simple MM/DD date matching
+  - Calculated holidays: Easter (Meeus/Jones/Butcher algorithm), Thanksgiving (4th Thursday of November)
+- **Key Files**:
+  - `src/utils/milestoneCalculations.ts`: Core calculation logic
+  - `src/utils/holidayCalculations.ts`: Holiday date algorithms
+  - `src/hooks/useMilestones.ts`: Real-time milestone updates (checks every minute for date changes)
+  - `src/components/FutureOutlook/`: All UI components
+- **Edge Cases**:
+  - Users over life expectancy: Shows "Living beyond expectations!" message
+  - No milestones selected: Shows empty state with configuration prompt
+  - Partial periods: If currently in a season/event, counts it as 1
 
 ### Edge Cases Handled
 - Users older than life expectancy show "Living beyond expectations!" message

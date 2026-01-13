@@ -9,4 +9,4 @@
 
 export { FutureOutlook } from './FutureOutlook';
 export { MilestoneCard } from './MilestoneCard';
-// MilestoneConfig will be exported in Phase 4
+export { MilestoneConfig } from './MilestoneConfig';

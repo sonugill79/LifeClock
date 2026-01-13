@@ -38,6 +38,7 @@ export type HolidayType = 'fixed' | 'calculated' | 'custom';
 export interface HolidayDefinition {
   id: string;              // Unique identifier (e.g., "christmas")
   name: string;            // Display name (e.g., "Christmas")
+  icon: string;            // Icon/emoji to display
   type: HolidayType;       // Fixed date, calculated, or custom
   date?: string;           // MM/DD for fixed dates (optional)
   calculateFn?: string;    // Function name for calculated holidays (optional)

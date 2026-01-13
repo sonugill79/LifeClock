@@ -17,11 +17,34 @@ interface MilestoneCardProps {
 }
 
 export const MilestoneCard: React.FC<MilestoneCardProps> = ({ milestone, onClick }) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
-    <div className="milestone-card" onClick={onClick} title={milestone.description}>
-      <div className="milestone-card__icon">{milestone.icon}</div>
-      <div className="milestone-card__count">{milestone.count}</div>
-      <div className="milestone-card__label">{milestone.label}</div>
-    </div>
+    <article
+      className="milestone-card"
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? handleKeyDown : undefined}
+      aria-label={`${milestone.label}: ${milestone.count} remaining`}
+    >
+      <div className="milestone-card__icon" aria-hidden="true">
+        {milestone.icon}
+      </div>
+      <div className="milestone-card__count" aria-label={`${milestone.count}`}>
+        {milestone.count}
+      </div>
+      <div className="milestone-card__label">
+        {milestone.label}
+      </div>
+      <span className="sr-only">
+        {milestone.description}
+      </span>
+    </article>
   );
 };

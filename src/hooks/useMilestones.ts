@@ -65,7 +65,7 @@ export function useMilestones(
           id: `holiday-${holidayId}`,
           type: 'holidays' as MilestoneType,
           label: holiday.name,
-          icon: '🎉',
+          icon: holiday.icon,
           count,
           description: `${count} more ${holiday.name} celebrations`,
         };
@@ -73,7 +73,13 @@ export function useMilestones(
       .filter((m): m is Milestone => m !== null);
 
     return [...standardMilestones, ...holidayMilestones];
-  }, [settings.selectedMilestones, settings.selectedHolidays, birthDate, currentDate, lifeExpectancyDate]);
+  }, [
+    JSON.stringify(settings.selectedMilestones),
+    JSON.stringify(settings.selectedHolidays),
+    birthDate.getTime(),
+    currentDate.toDateString(),
+    lifeExpectancyDate.getTime()
+  ]);
 
   return milestones;
 }

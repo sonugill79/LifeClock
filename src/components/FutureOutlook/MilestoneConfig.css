@@ -6,4 +6,238 @@
  * Note: Using global CSS (not CSS modules) to match existing pattern
  */
 
-/* TODO: Phase 4.2 - Add MilestoneConfig styles */
+/* Overlay */
+.milestone-config__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-surface-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal-backdrop);
+  padding: 1rem;
+  animation: fadeIn var(--transition-base) ease-out;
+}
+
+/* Modal */
+.milestone-config__modal {
+  background: var(--color-surface-default);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-2xl);
+  animation: slideUp var(--transition-base) ease-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.milestone-config__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.milestone-config__header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--color-text-strong);
+}
+
+.milestone-config__close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: var(--color-text-subtle);
+  transition: color var(--transition-fast);
+}
+
+.milestone-config__close-button:hover {
+  color: var(--color-text-strong);
+}
+
+/* Content */
+.milestone-config__content {
+  padding: 1.5rem;
+}
+
+.milestone-config__section {
+  margin-bottom: 2rem;
+}
+
+.milestone-config__section:last-child {
+  margin-bottom: 0;
+}
+
+.milestone-config__section h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: var(--color-text-strong);
+}
+
+/* Checkbox Grid */
+.milestone-config__checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.milestone-config__checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.milestone-config__checkbox:hover {
+  background: var(--color-surface-raised);
+}
+
+.milestone-config__checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  margin-right: var(--space-3);
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-fast);
+  background: var(--color-surface-default);
+}
+
+.milestone-config__checkbox input[type="checkbox"]:hover {
+  border-color: var(--color-action-primary);
+}
+
+.milestone-config__checkbox input[type="checkbox"]:checked {
+  background: var(--color-action-primary);
+  border-color: var(--color-action-primary);
+}
+
+.milestone-config__checkbox input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.milestone-config__checkbox input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: 2px;
+}
+
+.milestone-config__checkbox-label {
+  font-size: 14px;
+  color: var(--color-text-default);
+  user-select: none;
+}
+
+/* Footer */
+.milestone-config__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid var(--color-border-default);
+}
+
+.milestone-config__cancel-button,
+.milestone-config__save-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+}
+
+.milestone-config__cancel-button {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-default);
+}
+
+.milestone-config__cancel-button:hover {
+  background: var(--color-surface-canvas);
+}
+
+.milestone-config__save-button {
+  background: var(--color-action-primary);
+  color: var(--color-text-inverse);
+}
+
+.milestone-config__save-button:hover {
+  background: var(--color-action-primary-hover);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .milestone-config__overlay,
+  .milestone-config__modal {
+    animation: none;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .milestone-config__modal {
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .milestone-config__checkbox-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .milestone-config__header h3 {
+    font-size: 1.25rem;
+  }
+
+  .milestone-config__content {
+    padding: 1rem;
+  }
+
+  .milestone-config__footer {
+    padding: 1rem;
+  }
+}
