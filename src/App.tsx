@@ -29,6 +29,7 @@ function App() {
         birthday: new Date(storedData.birthday),
         gender: storedData.gender,
         country: storedData.country,
+        incomePercentile: storedData.incomePercentile,
       }
     : {
         birthday: null,
@@ -36,7 +37,11 @@ function App() {
         country: null,
       };
 
-  const lifeExpectancy = useLifeExpectancy(userData.country, userData.gender);
+  const { lifeExpectancy } = useLifeExpectancy(
+    userData.country,
+    userData.gender,
+    userData.incomePercentile
+  );
   const { timeLived, timeRemaining, currentTime } = useTimeDifference(
     userData.birthday,
     lifeExpectancy
@@ -56,6 +61,7 @@ function App() {
         birthday: data.birthday.toISOString(),
         gender: data.gender,
         country: data.country,
+        incomePercentile: data.incomePercentile,
         lastUpdated: new Date().toISOString(),
       };
 
