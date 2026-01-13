@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 /**
  * Custom hook to sync state with localStorage
@@ -29,22 +29,26 @@ export function useLocalStorage<T>(
   });
 
   // Return a wrapped version of useState's setter function that persists to localStorage
-  const setValue = (value: T | ((val: T) => T)) => {
+  const setValue = useCallback((value: T | ((val: T) => T)) => {
     try {
-      // Allow value to be a function (same API as useState)
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      // Use functional setState to get the latest value
+      setStoredValue(currentValue => {
+        // Allow value to be a function (same API as useState)
+        const valueToStore = typeof value === 'function'
+          ? (value as (val: T) => T)(currentValue)
+          : value;
 
-      // Save state
-      setStoredValue(valueToStore);
+        // Save to localStorage inside setState to ensure sync
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        }
 
-      // Save to local storage
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
-      }
+        return valueToStore;
+      });
     } catch (error) {
       console.error(`Error setting localStorage key "${key}":`, error);
     }
-  };
+  }, [key]);
 
   // Listen for changes to this key in other tabs/windows
   useEffect(() => {

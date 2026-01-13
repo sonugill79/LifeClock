@@ -34,51 +34,61 @@ export function useFutureOutlookStorage() {
   );
 
   const updateMilestones = (milestones: string[]) => {
-    setData({
-      ...data,
+    if (!Array.isArray(milestones)) {
+      console.error('[useFutureOutlookStorage] Invalid milestones:', milestones);
+      return;
+    }
+
+    setData(currentData => ({
+      ...currentData,
       selectedMilestones: milestones,
       lastUpdated: new Date().toISOString()
-    });
+    }));
   };
 
   const updateHolidays = (holidays: string[]) => {
-    setData({
-      ...data,
+    if (!Array.isArray(holidays)) {
+      console.error('[useFutureOutlookStorage] Invalid holidays:', holidays);
+      return;
+    }
+
+    setData(currentData => ({
+      ...currentData,
       selectedHolidays: holidays,
       lastUpdated: new Date().toISOString()
-    });
+    }));
   };
 
   const addCustomHoliday = (holiday: CustomHoliday) => {
-    setData({
-      ...data,
-      customHolidays: [...data.customHolidays, holiday],
+    setData(currentData => ({
+      ...currentData,
+      customHolidays: [...currentData.customHolidays, holiday],
       lastUpdated: new Date().toISOString(),
-    });
+    }));
   };
 
   const removeCustomHoliday = (id: string) => {
-    setData({
-      ...data,
-      customHolidays: data.customHolidays.filter(h => h.id !== id),
+    setData(currentData => ({
+      ...currentData,
+      customHolidays: currentData.customHolidays.filter(h => h.id !== id),
       lastUpdated: new Date().toISOString(),
-    });
+    }));
   };
 
   const toggleMotivational = () => {
-    setData({
-      ...data,
-      showMotivational: !data.showMotivational,
+    setData(currentData => ({
+      ...currentData,
+      showMotivational: !currentData.showMotivational,
       lastUpdated: new Date().toISOString()
-    });
+    }));
   };
 
   const setViewMode = (mode: 'remaining' | 'comparison') => {
-    setData({
-      ...data,
+    setData(currentData => ({
+      ...currentData,
       viewMode: mode,
       lastUpdated: new Date().toISOString()
-    });
+    }));
   };
 
   return {
