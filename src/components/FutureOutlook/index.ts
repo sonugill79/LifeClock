@@ -7,4 +7,6 @@
  * Used by: App.tsx
  */
 
-// TODO: Phase 3.6 - Export all components
+export { FutureOutlook } from './FutureOutlook';
+export { MilestoneCard } from './MilestoneCard';
+// MilestoneConfig will be exported in Phase 4
