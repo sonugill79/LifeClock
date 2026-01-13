@@ -764,6 +764,204 @@ body {
   outline-offset: 2px;
 }
 
+/* ========================================
+   INCOME SECTION IN SETTINGS
+   ======================================== */
+
+.income-section {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.income-section-header h4 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-strong);
+  margin-bottom: var(--spacing-xs);
+}
+
+.income-section-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-subtle);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.5;
+}
+
+/* Add Income Button */
+.add-income-button {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-action-primary);
+  background: var(--color-action-primary-subtle);
+  border: 2px dashed var(--color-action-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 44px; /* WCAG 2.5.5 */
+}
+
+.add-income-button:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--color-action-primary-hover);
+  color: var(--color-action-primary-hover);
+}
+
+.add-income-button:focus {
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: 2px;
+}
+
+/* Income Input Wrapper (in Settings) */
+.income-input-wrapper {
+  margin-top: var(--spacing-md);
+}
+
+/* Income Display (Showing current estimate) */
+.income-display {
+  margin-top: var(--spacing-md);
+}
+
+.income-estimate-box {
+  padding: var(--spacing-lg);
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.05),
+    rgba(168, 85, 247, 0.05)
+  );
+  border: 2px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.estimate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.estimate-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.estimate-value {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text-strong);
+}
+
+.estimate-details {
+  margin-bottom: var(--spacing-md);
+}
+
+.estimate-detail {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-default);
+  margin-bottom: var(--spacing-xs);
+}
+
+.estimate-detail strong {
+  font-weight: 600;
+}
+
+.estimate-difference {
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.estimate-difference.positive {
+  color: var(--color-success-700);
+  background: var(--color-success-50);
+  font-weight: 500;
+}
+
+.estimate-difference.neutral {
+  color: var(--color-text-subtle);
+  background: var(--color-surface-canvas);
+}
+
+/* Income Action Buttons */
+.income-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.edit-income-button,
+.remove-income-button {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 44px; /* WCAG 2.5.5 */
+}
+
+.edit-income-button {
+  color: var(--color-action-primary);
+  background: white;
+  border: 2px solid var(--color-action-primary);
+}
+
+.edit-income-button:hover {
+  background: var(--color-action-primary);
+  color: white;
+}
+
+.edit-income-button:focus {
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: 2px;
+}
+
+.remove-income-button {
+  color: var(--color-error-600);
+  background: white;
+  border: 2px solid var(--color-error-500);
+}
+
+.remove-income-button:hover {
+  background: var(--color-error-50);
+  border-color: var(--color-error-600);
+}
+
+.remove-income-button:focus {
+  outline: 2px solid var(--color-error-500);
+  outline-offset: 2px;
+}
+
+/* Responsive Adjustments for Settings Income Section */
+@media (max-width: 768px) {
+  .income-estimate-box {
+    padding: var(--spacing-md);
+  }
+
+  .estimate-value {
+    font-size: var(--font-size-lg);
+  }
+
+  .income-actions {
+    flex-direction: column;
+  }
+
+  .edit-income-button,
+  .remove-income-button {
+    width: 100%;
+  }
+}
+
 /* Theme Grid */
 .theme-grid {
   display: grid;
