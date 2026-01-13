@@ -1,9 +1,14 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { getLifeExpectancyByIncome } from '../utils/incomeLifeExpectancyCalculator';
+import {
+  getPercentileFromIncome,
+  getIncomeFromPercentile,
+  formatIncome,
+} from '../utils/incomePercentileMapper';
 
 interface IncomeInputProps {
-  value: number | undefined;
-  onChange: (value: number) => void;
+  value: number | undefined; // Percentile value (for storage)
+  onChange: (percentile: number) => void;
   onSkip: () => void;
   currentLifeExpectancy: number | null;
   gender: 'male' | 'female' | 'other' | null;
@@ -12,15 +17,14 @@ interface IncomeInputProps {
 /**
  * IncomeInput Component
  *
- * Provides a slider for users to input their household income percentile (1-100).
- * Features:
- * - WCAG 2.1 AA compliant (44×44px touch targets, ARIA, keyboard nav)
- * - Live preview of life expectancy changes (Decision #3)
- * - Dollar amount display at key percentiles
- * - Positive framing for all outcomes
+ * Allows users to input their household income in dollars.
+ * Automatically converts to percentile for life expectancy calculation.
  *
- * @see Decision #2: Percentile Slider
- * @see Decision #3: Live Preview
+ * Features:
+ * - WCAG 2.1 AA compliant
+ * - Live preview of life expectancy changes
+ * - Dollar amount slider with percentile display
+ * - Positive framing for all outcomes
  */
 export function IncomeInput({
   value,
@@ -29,13 +33,30 @@ export function IncomeInput({
   currentLifeExpectancy,
   gender,
 }: IncomeInputProps) {
-  const [sliderValue, setSliderValue] = useState(value || 50);
+  // Internal state: dollar amount
+  const [incomeAmount, setIncomeAmount] = useState<number>(57000); // Default ~50th percentile
 
-  // Calculate new life expectancy based on slider position
-  const newLifeExpectancy = useMemo(() => {
+  // Initialize income amount from percentile value
+  useEffect(() => {
+    if (value !== undefined && gender) {
+      const income = getIncomeFromPercentile(value, gender);
+      if (income !== null) {
+        setIncomeAmount(Math.round(income));
+      }
+    }
+  }, [value, gender]);
+
+  // Calculate percentile from dollar amount
+  const calculatedPercentile = useMemo(() => {
     if (!gender) return null;
-    return getLifeExpectancyByIncome(gender, sliderValue);
-  }, [gender, sliderValue]);
+    return getPercentileFromIncome(incomeAmount, gender);
+  }, [incomeAmount, gender]);
+
+  // Calculate new life expectancy
+  const newLifeExpectancy = useMemo(() => {
+    if (!gender || calculatedPercentile === null) return null;
+    return getLifeExpectancyByIncome(gender, calculatedPercentile);
+  }, [gender, calculatedPercentile]);
 
   // Calculate difference from WHO country estimate
   const difference = useMemo(() => {
@@ -44,41 +65,28 @@ export function IncomeInput({
   }, [newLifeExpectancy, currentLifeExpectancy]);
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseInt(e.target.value, 10);
-    setSliderValue(newValue);
-    onChange(newValue);
+    const newAmount = parseInt(e.target.value, 10);
+    setIncomeAmount(newAmount);
+
+    // Convert to percentile and notify parent
+    if (gender) {
+      const percentile = getPercentileFromIncome(newAmount, gender);
+      if (percentile !== null) {
+        onChange(percentile);
+      }
+    }
   };
 
-  // Approximate dollar amounts for key percentiles (2016 data)
-  const getDollarDisplay = (percentile: number): string => {
-    // Sample data points from Health Inequality Project
-    const dollarMap: { [key: number]: string } = {
-      1: '$433',
-      5: '$2.5k',
-      10: '$5.4k',
-      25: '$20k',
-      50: '$57k',
-      75: '$97k',
-      90: '$175k',
-      95: '$274k',
-      99: '$1.9M',
-      100: '$2.8M',
-    };
-
-    // Find closest percentile with dollar data
-    const percentiles = Object.keys(dollarMap).map(Number).sort((a, b) => a - b);
-    const closest = percentiles.reduce((prev, curr) =>
-      Math.abs(curr - percentile) < Math.abs(prev - percentile) ? curr : prev
-    );
-
-    return dollarMap[closest];
-  };
+  // Slider range: $0 to $300k (covers 1st to ~98th percentile)
+  const minIncome = 0;
+  const maxIncome = 300000;
+  const step = 1000; // $1k increments
 
   return (
     <div className="income-input">
       <div className="income-input-header">
         <label htmlFor="income-slider" className="income-input-label">
-          Household Income Percentile
+          Annual Household Income
           <span className="optional-badge">Optional</span>
         </label>
         <button
@@ -93,7 +101,7 @@ export function IncomeInput({
 
       <p className="income-input-description">
         Research shows income affects US life expectancy by up to 14 years.
-        Providing your income percentile gives you a more accurate estimate.
+        Enter your household income for a more accurate estimate.
       </p>
 
       {/* Slider Input - WCAG 2.1 AA Compliant */}
@@ -101,37 +109,39 @@ export function IncomeInput({
         <input
           id="income-slider"
           type="range"
-          min="1"
-          max="100"
-          step="1"
-          value={sliderValue}
+          min={minIncome}
+          max={maxIncome}
+          step={step}
+          value={incomeAmount}
           onChange={handleSliderChange}
           className="income-slider"
-          aria-label="Income percentile from 1st to 100th"
-          aria-valuemin={1}
-          aria-valuemax={100}
-          aria-valuenow={sliderValue}
-          aria-valuetext={`${sliderValue}th percentile, approximately ${getDollarDisplay(sliderValue)} per year`}
+          aria-label={`Annual household income from $${minIncome.toLocaleString()} to $${maxIncome.toLocaleString()}`}
+          aria-valuemin={minIncome}
+          aria-valuemax={maxIncome}
+          aria-valuenow={incomeAmount}
+          aria-valuetext={`${formatIncome(incomeAmount)} per year, ${calculatedPercentile}th percentile`}
           style={{ touchAction: 'manipulation' }}
         />
 
-        {/* Percentile markers */}
+        {/* Income amount markers */}
         <div className="percentile-markers">
-          <span className="marker">1st</span>
-          <span className="marker">25th</span>
-          <span className="marker">50th</span>
-          <span className="marker">75th</span>
-          <span className="marker">99th</span>
+          <span className="marker">$0</span>
+          <span className="marker">$50k</span>
+          <span className="marker">$100k</span>
+          <span className="marker">$150k</span>
+          <span className="marker">$300k</span>
         </div>
       </div>
 
       {/* Current value display */}
       <div className="percentile-display">
-        <strong>{sliderValue}th percentile</strong>
-        <span className="dollar-amount">~{getDollarDisplay(sliderValue)}/year</span>
+        <strong>{formatIncome(incomeAmount)}/year</strong>
+        {calculatedPercentile !== null && (
+          <span className="dollar-amount">{calculatedPercentile}th percentile</span>
+        )}
       </div>
 
-      {/* Live preview - Decision #3: MANDATORY */}
+      {/* Live preview */}
       {newLifeExpectancy !== null && (
         <div className="live-preview" role="status" aria-live="polite">
           <div className="preview-content">

@@ -133,7 +133,7 @@ export function getLifeExpectancySource(
   incomePercentile?: number
 ): LifeExpectancySource {
   // Priority 1: US + income percentile → income data
-  if (country === 'US' && incomePercentile !== undefined) {
+  if (country === 'USA' && incomePercentile !== undefined) {
     return {
       type: 'income',
       dataSource: 'Health Inequality Project',

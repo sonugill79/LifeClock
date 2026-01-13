@@ -32,7 +32,7 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
   // Clear income percentile when country changes away from US
   const handleCountryChange = (newCountry: string) => {
     setCountry(newCountry);
-    if (newCountry !== 'US' && incomePercentile !== undefined) {
+    if (newCountry !== 'USA' && incomePercentile !== undefined) {
       setIncomePercentile(undefined);
     }
   };
@@ -215,7 +215,7 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
       </div>
 
       {/* Conditional Income Input - US users only (Decision #2) */}
-      {country === 'US' && (
+      {country === 'USA' && (
         <div className="form-group income-field-container">
           <IncomeInput
             value={incomePercentile}

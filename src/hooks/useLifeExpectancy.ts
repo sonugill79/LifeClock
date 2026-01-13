@@ -33,7 +33,7 @@ export function useLifeExpectancy(
     }
 
     // Priority 1: US + Income Percentile → Try income data
-    if (country === 'US' && incomePercentile !== undefined) {
+    if (country === 'USA' && incomePercentile !== undefined) {
       try {
         const incomeLE = getLifeExpectancyByIncome(gender, incomePercentile);
 

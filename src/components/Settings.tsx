@@ -45,7 +45,7 @@ export function Settings({ isOpen, onClose, currentTheme, onThemeChange, userDat
   // Clear income percentile when country changes away from US
   const handleCountryChange = (newCountry: string) => {
     setCountry(newCountry);
-    if (newCountry !== 'US') {
+    if (newCountry !== 'USA') {
       setIncomePercentile(undefined);
       setShowIncomeInput(false);
     }
@@ -58,7 +58,7 @@ export function Settings({ isOpen, onClose, currentTheme, onThemeChange, userDat
       setGender(userData.gender);
       setCountry(userData.country || '');
       setIncomePercentile(userData.incomePercentile);
-      setShowIncomeInput(userData.country === 'US' && userData.incomePercentile !== undefined);
+      setShowIncomeInput(userData.country === 'USA' && userData.incomePercentile !== undefined);
       setProfileErrors({}); // Clear any errors when opening
     }
   }, [isOpen]); // Only depend on isOpen, not userData
@@ -277,7 +277,7 @@ export function Settings({ isOpen, onClose, currentTheme, onThemeChange, userDat
                 </div>
 
                 {/* Income Section - US users only */}
-                {country === 'US' && (
+                {country === 'USA' && (
                   <div className="income-section">
                     <div className="income-section-header">
                       <h4>💰 Household Income (Optional)</h4>
