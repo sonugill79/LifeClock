@@ -1,0 +1,62 @@
+{
+  "fixed": [
+    {
+      "id": "christmas",
+      "name": "Christmas",
+      "icon": "🎄",
+      "type": "fixed",
+      "date": "12/25"
+    },
+    {
+      "id": "new-years-day",
+      "name": "New Year's Day",
+      "icon": "🎊",
+      "type": "fixed",
+      "date": "01/01"
+    },
+    {
+      "id": "new-years-eve",
+      "name": "New Year's Eve",
+      "icon": "🥳",
+      "type": "fixed",
+      "date": "12/31"
+    },
+    {
+      "id": "independence-day-us",
+      "name": "Independence Day (US)",
+      "icon": "🎆",
+      "type": "fixed",
+      "date": "07/04"
+    },
+    {
+      "id": "valentines-day",
+      "name": "Valentine's Day",
+      "icon": "💝",
+      "type": "fixed",
+      "date": "02/14"
+    },
+    {
+      "id": "halloween",
+      "name": "Halloween",
+      "icon": "🎃",
+      "type": "fixed",
+      "date": "10/31"
+    }
+  ],
+  "calculated": [
+    {
+      "id": "easter",
+      "name": "Easter",
+      "icon": "🐰",
+      "type": "calculated",
+      "calculateFn": "calculateEaster"
+    },
+    {
+      "id": "thanksgiving-us",
+      "name": "Thanksgiving (US)",
+      "icon": "🦃",
+      "type": "calculated",
+      "calculateFn": "calculateThanksgiving"
+    }
+  ]
+}

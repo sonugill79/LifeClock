@@ -10,7 +10,10 @@ LifeClock is a web application that visualizes your life in real-time, showing e
 
 - **Time Lived Clock**: Real-time display of your exact age down to the second
 - **Time Remaining Clock**: Statistical countdown based on your country and gender
+- **Future Outlook**: See how many birthdays, summers, weekends, and holidays you have left to make them count
+- **Life Timeline**: Visual grid representation of your life (years, months, or weeks view)
 - **100+ Countries**: Comprehensive life expectancy data from WHO 2023
+- **Customizable Milestones**: Choose which life events matter to you
 - **Privacy-First**: All data stays on your device (localStorage only)
 - **Responsive Design**: Works beautifully on mobile and desktop
 - **Offline Capable**: No internet required after initial load
@@ -46,8 +49,10 @@ npm run preview
 
 1. **First Visit**: Enter your birthday, gender, and country
 2. **Watch Time**: See your life tick by in real-time
-3. **Edit Anytime**: Click "Edit Details" to update your information
-4. **Data Persists**: Your settings are saved automatically
+3. **View Milestones**: Scroll down to see Future Outlook showing birthdays, summers, weekends, and holidays remaining
+4. **Customize**: Click the gear icon (⚙️) to select which milestones and holidays matter to you
+5. **Edit Anytime**: Click "Edit Details" to update your information
+6. **Data Persists**: All settings are saved automatically to your browser
 
 ## Technology Stack
 
@@ -66,18 +71,29 @@ src/
 │   ├── ClockDisplay.tsx        # Reusable clock component
 │   ├── UserInputForm.tsx       # Data entry form
 │   ├── TimeLived.tsx           # Time lived wrapper
-│   └── TimeRemaining.tsx       # Time remaining wrapper
+│   ├── TimeRemaining.tsx       # Time remaining wrapper
+│   ├── LifeTimeline.tsx        # Timeline visualization
+│   └── FutureOutlook/          # Future Outlook feature
+│       ├── FutureOutlook.tsx   # Main container
+│       ├── MilestoneCard.tsx   # Individual milestone display
+│       └── MilestoneConfig.tsx # Configuration modal
 ├── hooks/               # Custom React hooks
 │   ├── useTimeDifference.ts    # Real-time calculations
 │   ├── useLocalStorage.ts      # Persistent storage
-│   └── useLifeExpectancy.ts    # Life expectancy lookup
+│   ├── useLifeExpectancy.ts    # Life expectancy lookup
+│   ├── useMilestones.ts        # Milestone calculations
+│   └── useFutureOutlookStorage.ts  # Future Outlook preferences
 ├── utils/               # Utility functions
 │   ├── timeCalculations.ts     # Core date math
+│   ├── milestoneCalculations.ts # Milestone logic
+│   ├── holidayCalculations.ts  # Holiday date algorithms
 │   └── lifeExpectancyCalculator.ts  # Data lookup
 ├── data/                # Static data
-│   └── lifeExpectancy.json     # WHO life expectancy data
+│   ├── lifeExpectancy.json     # WHO life expectancy data
+│   └── holidays.json           # Holiday definitions
 ├── types/               # TypeScript definitions
-│   └── index.ts
+│   ├── index.ts                # Core types
+│   └── milestones.ts           # Future Outlook types
 ├── App.tsx              # Main app component
 ├── App.css              # Global styles
 └── main.tsx             # Entry point
@@ -187,14 +203,16 @@ Edit `src/data/lifeExpectancy.json`:
 
 ## Future Enhancements
 
+- [x] **Future Outlook**: Life milestones tracking (birthdays, summers, weekends, holidays) ✨ **NEW**
+- [x] **Life Timeline**: Visual grid representation of life progress ✨ **IMPLEMENTED**
 - [ ] Dark/Light theme toggle
-- [ ] Progress bar visualization
 - [ ] Statistics panel (heartbeats, breaths, etc.)
 - [ ] Share functionality
 - [ ] Multiple profiles
 - [ ] PWA support
-- [ ] Motivational quotes
+- [ ] Custom user-entered holidays
 - [ ] Bucket list integration
+- [ ] Milestone notifications
 
 ## Contributing
 

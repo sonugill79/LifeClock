@@ -1,0 +1,203 @@
+/**
+ * MilestoneCard.css
+ *
+ * Purpose: Styles for individual milestone cards
+ * Phase: Phase 3.2 - UI Components
+ * Note: Using global CSS (not CSS modules) to match existing pattern
+ */
+
+.milestone-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  height: 180px;
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg,
+    var(--color-milestone-accent-start) 0%,
+    var(--color-milestone-accent-end) 100%);
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shine effect */
+.milestone-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.milestone-card:hover::after {
+  left: 100%;
+}
+
+.milestone-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.milestone-card:focus-visible {
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: 2px;
+  transform: translateY(-2px);
+}
+
+.milestone-card:active {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.milestone-card__icon {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--space-2);
+  line-height: 1;
+}
+
+.milestone-card__count {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-mono);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--space-1);
+  color: var(--color-milestone-count);
+}
+
+.milestone-card__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-milestone-text);
+  text-align: center;
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skeleton loading state */
+.milestone-card--skeleton {
+  background: var(--color-surface-raised);
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.skeleton-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.skeleton-icon,
+.skeleton-count,
+.skeleton-label {
+  background: var(--color-neutral-200);
+  border-radius: var(--radius-md);
+}
+
+@media (prefers-color-scheme: dark) {
+  .skeleton-icon,
+  .skeleton-count,
+  .skeleton-label {
+    background: var(--color-neutral-700);
+  }
+}
+
+.skeleton-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--space-2);
+}
+
+.skeleton-count {
+  width: 60px;
+  height: 48px;
+  margin-bottom: var(--space-1);
+}
+
+.skeleton-label {
+  width: 80px;
+  height: 14px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .milestone-card {
+    transition: none;
+  }
+
+  .milestone-card:hover {
+    transform: none;
+  }
+
+  .milestone-card::after {
+    display: none;
+  }
+
+  .skeleton-shimmer {
+    animation: none;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .milestone-card {
+    min-width: 120px;
+    height: 160px;
+    padding: var(--space-4);
+  }
+
+  .milestone-card__icon {
+    font-size: var(--font-size-3xl);
+  }
+
+  .milestone-card__count {
+    font-size: var(--font-size-3xl);
+  }
+
+  .milestone-card__label {
+    font-size: var(--font-size-xs);
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { TimelineIcon } from './TimelineIcon';
 import type { TimelineData, IconStyle, TimelineGranularity, TimelineUnit } from '../types';
 
@@ -41,12 +41,6 @@ export function TimelineGrid({ timelineData, iconStyle, granularity }: TimelineG
     if (!isMobile || granularity === 'years') return null;
     return groupByYear(units);
   }, [isMobile, granularity, units]);
-
-  // Desktop: Multi-year rows for months view (5 years per row = 60 columns)
-  const desktopColumns = useMemo(() => {
-    if (isMobile || granularity !== 'months') return layout.columns;
-    return 60; // 12 months × 5 years
-  }, [isMobile, granularity, layout.columns]);
 
   return (
     <div className="timeline-grid-container">
