@@ -31,33 +31,40 @@ npx tsc -b            # Check types without building
 
 ### Key Files
 - `src/App.tsx`: Main orchestrator, manages data flow between storage/hooks/components
-- `src/types/index.ts`: All TypeScript interfaces (UserData, StoredUserData, TimeLived, TimelineUnit, etc.)
+- `src/types/index.ts`: All TypeScript interfaces (UserData, StoredUserData, TimeLived, TimelineUnit, ThemeConfig, etc.)
 - `src/types/milestones.ts`: Future Outlook type definitions (Milestone, HolidayDefinition, FutureOutlookData)
 - `src/hooks/useLocalStorage.ts`: Generic localStorage sync hook with cross-tab sync
+- `src/hooks/useTimeDifference.ts`: Real-time time calculations (updates every second)
+- `src/hooks/useLifeExpectancy.ts`: Life expectancy lookup hook
 - `src/hooks/useMilestones.ts`: Real-time milestone calculations hook
 - `src/hooks/useFutureOutlookStorage.ts`: Future Outlook preferences storage hook
+- `src/hooks/useTheme.ts`: Theme management hook
 - `src/utils/timeCalculations.ts`: Core date math (calculateTimeDifference, isOverLifeExpectancy)
 - `src/utils/milestoneCalculations.ts`: All milestone calculation logic (birthdays, seasons, weekends, holidays)
 - `src/utils/holidayCalculations.ts`: Holiday date calculation algorithms (Easter, Thanksgiving)
 - `src/utils/lifeExpectancyCalculator.ts`: Looks up country/gender life expectancy with fallback
+- `src/utils/timelineCalculations.ts`: Timeline grid calculations (years/months/weeks granularity)
 - `src/components/LifeTimeline.tsx`: Main timeline component coordinating grid layout
 - `src/components/FutureOutlook/`: Future Outlook components (FutureOutlook, MilestoneCard, MilestoneConfig)
-- `src/utils/timelineCalculations.ts`: Timeline grid calculations (years/months/weeks granularity)
+- `src/components/Settings.tsx`: Settings modal for profile editing and theme selection
+- `src/config/themes.ts`: Theme definitions (8 color schemes)
+- `src/data/lifeExpectancy.json`: WHO life expectancy data (100+ countries)
 - `src/data/holidays.json`: Holiday definitions (fixed and calculated dates)
 
 ### Component Hierarchy
 ```
 App
 ├── UserInputForm (initial setup or edit mode)
-└── [Main View]
-    ├── TimeLived (wraps ClockDisplay)
-    ├── TimeRemaining (wraps ClockDisplay)
-    ├── LifeTimeline
-    │   └── TimelineGrid
-    │       └── TimelineIcon (repeated for each unit)
-    └── FutureOutlook
-        ├── MilestoneCard (repeated for each milestone)
-        └── MilestoneConfig (modal, conditional)
+├── [Main View]
+│   ├── TimeLived (wraps ClockDisplay)
+│   ├── TimeRemaining (wraps ClockDisplay)
+│   ├── FutureOutlook
+│   │   ├── MilestoneCard (repeated for each milestone)
+│   │   └── MilestoneConfig (modal, conditional)
+│   └── LifeTimeline
+│       └── TimelineGrid
+│           └── TimelineIcon (repeated for each unit)
+└── Settings (modal, conditional)
 ```
 
 ### State Management
@@ -70,10 +77,35 @@ App
 - **Storage Keys**:
   - `'lifeclock-user-data'`: User profile data (birthday, country, gender)
   - `'lifeclock-future-outlook'`: Future Outlook preferences (selected milestones, holidays)
-- **Format**: JSON with ISO strings (`birthday`, `lastUpdated`)
+  - `'lifeclock-theme'`: Current theme selection (ThemeName)
+  - `'lifeclock-timeline-granularity'`: Timeline view mode (years/months/weeks)
+  - `'lifeclock-timeline-icon-style'`: Timeline icon style (squares/circles/unicode/rounded-rect)
+- **Format**: JSON with ISO strings for dates (`birthday`, `lastUpdated`)
 - **Privacy**: No backend, no analytics, no external requests
+- **Cross-tab Sync**: All localStorage changes sync across tabs via storage events
 
 ## Development Notes
+
+### Theme System
+- **8 Built-in Themes**: Ocean Sunset (default), Neon Dreams, Forest Fire, Cyber Glow, Grape Punch, Sunset Glow, Electric Storm, Tropical Vibes
+- **Theme Application**: `useTheme` hook sets `data-theme` attribute on `document.documentElement`
+- **CSS Variables**: Each theme defines `--lived-primary` and `--remaining-primary` color values
+- **Settings Modal**: Accessible via header gear icon, allows profile editing and theme selection
+- **Live Preview**: Hover over theme cards in Settings to preview before applying
+- **Theme Config**: Define new themes in `src/config/themes.ts` with `ThemeConfig` interface
+
+### Adding Themes
+Add to `src/config/themes.ts`:
+```typescript
+'theme-name': {
+  name: 'theme-name',
+  displayName: 'Display Name',
+  description: 'Brief description',
+  livedPrimary: '#hex-color',    // Color for time lived
+  remainingPrimary: '#hex-color', // Color for time remaining
+}
+```
+Then add corresponding CSS in `App.css` under `[data-theme="theme-name"]`.
 
 ### Adding Countries
 Edit `src/data/lifeExpectancy.json` with WHO data:

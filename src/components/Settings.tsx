@@ -1,6 +1,8 @@
-import { useEffect, useState, FormEvent } from 'react';
+import { useEffect, useState, FormEvent, useMemo } from 'react';
 import { THEMES, DEFAULT_THEME } from '../config/themes';
-import { getCountryList } from '../utils/lifeExpectancyCalculator';
+import { getCountryList, getLifeExpectancyWithFallback } from '../utils/lifeExpectancyCalculator';
+import { getLifeExpectancyByIncome } from '../utils/incomeLifeExpectancyCalculator';
+import { IncomeInput } from './IncomeInput';
 import type { ThemeName, UserData } from '../types';
 
 interface SettingsProps {
@@ -17,9 +19,37 @@ export function Settings({ isOpen, onClose, currentTheme, onThemeChange, userDat
   const [birthdayString, setBirthdayString] = useState<string>('');
   const [gender, setGender] = useState<'male' | 'female' | 'other' | null>(null);
   const [country, setCountry] = useState<string>('');
+  const [incomePercentile, setIncomePercentile] = useState<number | undefined>(undefined);
+  const [showIncomeInput, setShowIncomeInput] = useState<boolean>(false);
   const [profileErrors, setProfileErrors] = useState<{ [key: string]: string }>({});
 
   const countries = getCountryList();
+
+  // Calculate life expectancy estimates for comparison
+  const whoEstimate = useMemo(() => {
+    if (!country || !gender) return null;
+    return getLifeExpectancyWithFallback(country, gender);
+  }, [country, gender]);
+
+  const incomeEstimate = useMemo(() => {
+    if (!gender || !incomePercentile) return null;
+    return getLifeExpectancyByIncome(gender, incomePercentile);
+  }, [gender, incomePercentile]);
+
+  // Calculate difference between estimates
+  const estimateDifference = useMemo(() => {
+    if (!incomeEstimate || !whoEstimate) return null;
+    return incomeEstimate - whoEstimate;
+  }, [incomeEstimate, whoEstimate]);
+
+  // Clear income percentile when country changes away from US
+  const handleCountryChange = (newCountry: string) => {
+    setCountry(newCountry);
+    if (newCountry !== 'USA') {
+      setIncomePercentile(undefined);
+      setShowIncomeInput(false);
+    }
+  };
 
   // Initialize form fields ONLY when modal opens (not on userData changes while open)
   useEffect(() => {
@@ -27,6 +57,8 @@ export function Settings({ isOpen, onClose, currentTheme, onThemeChange, userDat
       setBirthdayString(userData.birthday.toISOString().split('T')[0]);
       setGender(userData.gender);
       setCountry(userData.country || '');
+      setIncomePercentile(userData.incomePercentile);
+      setShowIncomeInput(userData.country === 'USA' && userData.incomePercentile !== undefined);
       setProfileErrors({}); // Clear any errors when opening
     }
   }, [isOpen]); // Only depend on isOpen, not userData
@@ -117,6 +149,7 @@ export function Settings({ isOpen, onClose, currentTheme, onThemeChange, userDat
       birthday,
       gender,
       country,
+      incomePercentile,
     });
 
     // Clear errors after successful save
@@ -182,7 +215,7 @@ export function Settings({ isOpen, onClose, currentTheme, onThemeChange, userDat
                   <select
                     id="profile-country"
                     value={country}
-                    onChange={(e) => setCountry(e.target.value)}
+                    onChange={(e) => handleCountryChange(e.target.value)}
                     className={profileErrors.country ? 'error' : ''}
                     required
                   >
@@ -242,6 +275,86 @@ export function Settings({ isOpen, onClose, currentTheme, onThemeChange, userDat
                     <span className="error-message">{profileErrors.gender}</span>
                   )}
                 </div>
+
+                {/* Income Section - US users only */}
+                {country === 'USA' && (
+                  <div className="income-section">
+                    <div className="income-section-header">
+                      <h4>💰 Household Income (Optional)</h4>
+                      <p className="income-section-description">
+                        Add your income percentile for a more accurate life expectancy estimate
+                      </p>
+                    </div>
+
+                    {!showIncomeInput && !incomePercentile ? (
+                      // Show "Add Income" button when no income data
+                      <button
+                        type="button"
+                        className="add-income-button"
+                        onClick={() => setShowIncomeInput(true)}
+                      >
+                        + Add Income Data
+                      </button>
+                    ) : showIncomeInput ? (
+                      // Show IncomeInput component when adding/editing
+                      <div className="income-input-wrapper">
+                        <IncomeInput
+                          value={incomePercentile}
+                          onChange={setIncomePercentile}
+                          onSkip={() => {
+                            setIncomePercentile(undefined);
+                            setShowIncomeInput(false);
+                          }}
+                          currentLifeExpectancy={whoEstimate}
+                          gender={gender}
+                        />
+                      </div>
+                    ) : (
+                      // Show current income estimate with edit/remove buttons
+                      <div className="income-display">
+                        <div className="income-estimate-box">
+                          <div className="estimate-header">
+                            <span className="estimate-label">Current Estimate</span>
+                            {incomeEstimate && (
+                              <span className="estimate-value">{incomeEstimate.toFixed(1)} years</span>
+                            )}
+                          </div>
+
+                          <div className="estimate-details">
+                            <p className="estimate-detail">
+                              <strong>Income Percentile:</strong> {incomePercentile}th
+                            </p>
+                            {estimateDifference !== null && Math.abs(estimateDifference) >= 0.5 && (
+                              <p className={`estimate-difference ${estimateDifference > 0 ? 'positive' : 'neutral'}`}>
+                                {estimateDifference > 0 ? '+' : ''}{estimateDifference.toFixed(1)} years vs country average
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="income-actions">
+                            <button
+                              type="button"
+                              className="edit-income-button"
+                              onClick={() => setShowIncomeInput(true)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              className="remove-income-button"
+                              onClick={() => {
+                                setIncomePercentile(undefined);
+                                setShowIncomeInput(false);
+                              }}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <button type="submit" className="profile-save-button">
                   Save Changes
