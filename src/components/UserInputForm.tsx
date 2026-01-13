@@ -1,5 +1,6 @@
-import { useState, FormEvent } from 'react';
-import { getCountryList } from '../utils/lifeExpectancyCalculator';
+import { useState, FormEvent, useMemo } from 'react';
+import { getCountryList, getLifeExpectancyWithFallback } from '../utils/lifeExpectancyCalculator';
+import { IncomeInput } from './IncomeInput';
 import type { UserData } from '../types';
 
 interface UserInputFormProps {
@@ -15,9 +16,26 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
     initialData?.gender || null
   );
   const [country, setCountry] = useState<string>(initialData?.country || '');
+  const [incomePercentile, setIncomePercentile] = useState<number | undefined>(
+    initialData?.incomePercentile
+  );
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const countries = getCountryList();
+
+  // Calculate WHO country life expectancy for live preview
+  const currentWHOEstimate = useMemo(() => {
+    if (!country || !gender) return null;
+    return getLifeExpectancyWithFallback(country, gender);
+  }, [country, gender]);
+
+  // Clear income percentile when country changes away from US
+  const handleCountryChange = (newCountry: string) => {
+    setCountry(newCountry);
+    if (newCountry !== 'US' && incomePercentile !== undefined) {
+      setIncomePercentile(undefined);
+    }
+  };
 
   const validateForm = (): boolean => {
     const newErrors: { [key: string]: string } = {};
@@ -71,6 +89,7 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
       birthday,
       gender,
       country,
+      incomePercentile,
     });
   };
 
@@ -176,7 +195,7 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
         <select
           id="country"
           value={country}
-          onChange={(e) => setCountry(e.target.value)}
+          onChange={(e) => handleCountryChange(e.target.value)}
           className={errors.country ? 'error' : ''}
           aria-invalid={!!errors.country}
           aria-describedby={errors.country ? 'country-error' : undefined}
@@ -194,6 +213,19 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
           </span>
         )}
       </div>
+
+      {/* Conditional Income Input - US users only (Decision #2) */}
+      {country === 'US' && (
+        <div className="form-group income-field-container">
+          <IncomeInput
+            value={incomePercentile}
+            onChange={setIncomePercentile}
+            onSkip={() => setIncomePercentile(undefined)}
+            currentLifeExpectancy={currentWHOEstimate}
+            gender={gender}
+          />
+        </div>
+      )}
 
       <button type="submit" className="submit-button">
         {initialData ? 'Update Clock' : 'Start Your LifeClock'}
