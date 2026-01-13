@@ -37,7 +37,7 @@ function App() {
         country: null,
       };
 
-  const { lifeExpectancy } = useLifeExpectancy(
+  const { lifeExpectancy, source } = useLifeExpectancy(
     userData.country,
     userData.gender,
     userData.incomePercentile
@@ -143,7 +143,14 @@ function App() {
           <>
             <div className="clocks-container">
               {timeLived && <TimeLived time={timeLived} />}
-              {timeRemaining && <TimeRemaining time={timeRemaining} isOverExpectancy={isOver} />}
+              {timeRemaining && (
+                <TimeRemaining
+                  time={timeRemaining}
+                  isOverExpectancy={isOver}
+                  lifeExpectancy={lifeExpectancy}
+                  source={source}
+                />
+              )}
             </div>
 
             {/* Future Outlook - Life Milestones */}

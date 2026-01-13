@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { getLifeExpectancyByIncome } from '../utils/incomeLifeExpectancyCalculator';
 import {
   getPercentileFromIncome,
@@ -36,13 +36,24 @@ export function IncomeInput({
   // Internal state: dollar amount
   const [incomeAmount, setIncomeAmount] = useState<number>(57000); // Default ~50th percentile
 
-  // Initialize income amount from percentile value
+  // Track the last percentile we sent to parent to avoid feedback loop
+  const lastSentPercentile = useRef<number | undefined>(undefined);
+
+  // Initialize income amount from percentile value (only from external changes)
   useEffect(() => {
     if (value !== undefined && gender) {
-      const income = getIncomeFromPercentile(value, gender);
-      if (income !== null) {
-        setIncomeAmount(Math.round(income));
+      // Only update if this is an external change (not from our own onChange)
+      if (value !== lastSentPercentile.current) {
+        const income = getIncomeFromPercentile(value, gender);
+        if (income !== null) {
+          setIncomeAmount(Math.round(income));
+          lastSentPercentile.current = value;
+        }
       }
+    } else if (value === undefined) {
+      // Reset to default when value is cleared (Skip button clicked)
+      setIncomeAmount(57000); // Default ~50th percentile
+      lastSentPercentile.current = undefined;
     }
   }, [value, gender]);
 
@@ -72,15 +83,16 @@ export function IncomeInput({
     if (gender) {
       const percentile = getPercentileFromIncome(newAmount, gender);
       if (percentile !== null) {
+        lastSentPercentile.current = percentile; // Track what we sent
         onChange(percentile);
       }
     }
   };
 
-  // Slider range: $0 to $300k (covers 1st to ~98th percentile)
+  // Slider range: $0 to $2M (covers 1st to 100th percentile)
   const minIncome = 0;
-  const maxIncome = 300000;
-  const step = 1000; // $1k increments
+  const maxIncome = 2000000;
+  const step = 5000; // $5k increments for smoother UX
 
   return (
     <div className="income-input">
@@ -126,10 +138,10 @@ export function IncomeInput({
         {/* Income amount markers */}
         <div className="percentile-markers">
           <span className="marker">$0</span>
-          <span className="marker">$50k</span>
-          <span className="marker">$100k</span>
-          <span className="marker">$150k</span>
-          <span className="marker">$300k</span>
+          <span className="marker">$500k</span>
+          <span className="marker">$1M</span>
+          <span className="marker">$1.5M</span>
+          <span className="marker">$2M</span>
         </div>
       </div>
 

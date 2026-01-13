@@ -19,6 +19,9 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
   const [incomePercentile, setIncomePercentile] = useState<number | undefined>(
     initialData?.incomePercentile
   );
+  const [showIncomeInput, setShowIncomeInput] = useState<boolean>(
+    initialData?.incomePercentile !== undefined
+  );
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const countries = getCountryList();
@@ -32,9 +35,16 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
   // Clear income percentile when country changes away from US
   const handleCountryChange = (newCountry: string) => {
     setCountry(newCountry);
-    if (newCountry !== 'USA' && incomePercentile !== undefined) {
+    if (newCountry !== 'USA') {
       setIncomePercentile(undefined);
+      setShowIncomeInput(false);
     }
+  };
+
+  // Handle Skip button - collapse the income input
+  const handleSkipIncome = () => {
+    setIncomePercentile(undefined);
+    setShowIncomeInput(false);
   };
 
   const validateForm = (): boolean => {
@@ -217,13 +227,30 @@ export function UserInputForm({ onSubmit, initialData }: UserInputFormProps) {
       {/* Conditional Income Input - US users only (Decision #2) */}
       {country === 'USA' && (
         <div className="form-group income-field-container">
-          <IncomeInput
-            value={incomePercentile}
-            onChange={setIncomePercentile}
-            onSkip={() => setIncomePercentile(undefined)}
-            currentLifeExpectancy={currentWHOEstimate}
-            gender={gender}
-          />
+          {!showIncomeInput ? (
+            // Show "Add Income" button when collapsed
+            <div className="add-income-section">
+              <p className="add-income-description">
+                Research shows income affects US life expectancy by up to 14 years.
+              </p>
+              <button
+                type="button"
+                className="add-income-button"
+                onClick={() => setShowIncomeInput(true)}
+              >
+                + Add Income for Better Accuracy
+              </button>
+            </div>
+          ) : (
+            // Show IncomeInput component when expanded
+            <IncomeInput
+              value={incomePercentile}
+              onChange={setIncomePercentile}
+              onSkip={handleSkipIncome}
+              currentLifeExpectancy={currentWHOEstimate}
+              gender={gender}
+            />
+          )}
         </div>
       )}
 
