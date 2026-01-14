@@ -10,6 +10,7 @@ LifeClock is a web application that visualizes your life in real-time, showing e
 
 - **Time Lived Clock**: Real-time display of your exact age down to the second
 - **Time Remaining Clock**: Statistical countdown based on your country and gender
+- **Income-Based Life Expectancy** ✨ **NEW**: US users can get more accurate estimates based on household income (up to 14 years difference)
 - **Future Outlook**: See how many birthdays, summers, weekends, and holidays you have left to make them count
 - **Life Timeline**: Visual grid representation of your life (years, months, or weeks view)
 - **100+ Countries**: Comprehensive life expectancy data from WHO 2023
@@ -103,6 +104,8 @@ src/
 
 - **[PRD.md](./PRD.md)**: Product Requirements Document
 - **[IMPLEMENTATION.md](./IMPLEMENTATION.md)**: Detailed implementation guide
+- **[METHODOLOGY.md](./METHODOLOGY.md)**: Data sources and calculation methodology
+- **[PRIVACY.md](./PRIVACY.md)**: Privacy policy and data handling
 
 ## Performance
 
@@ -126,13 +129,26 @@ src/
 - **HTTPS Ready**: Deploy on secure hosts (Vercel, Netlify)
 - **Open Source**: Full transparency
 
-## Data Source
+## Data Sources
 
 Life expectancy data sourced from:
-- **WHO (World Health Organization)** 2023 statistics
-- **Coverage**: 100 countries
-- **Granularity**: Male/Female specific values
-- **Update Frequency**: Annually
+
+### WHO (World Health Organization)
+- **Source**: WHO Global Health Observatory 2023 statistics
+- **Coverage**: 100+ countries worldwide
+- **Granularity**: Male/Female/Combined values
+- **Used For**: Default estimates for all users, only source for non-US countries
+
+### The Health Inequality Project (US Only)
+- **Source**: Chetty et al. (2016) - 1.4 billion tax records paired with Social Security mortality data
+- **Coverage**: United States income-based life expectancy (1st-100th percentile)
+- **Granularity**: Income percentile + gender
+- **Used For**: More accurate estimates for US users who provide household income
+- **Accuracy**: Income affects US life expectancy by up to 14.6 years
+- **Privacy**: Income converted to percentile locally, never sent to any server
+
+📊 **See [METHODOLOGY.md](./METHODOLOGY.md) for full calculation details**
+🔒 **See [PRIVACY.md](./PRIVACY.md) for data privacy information**
 
 ## Edge Cases Handled
 
@@ -179,6 +195,15 @@ npm run build
 ### Running Tests
 
 ```bash
+# Run test suite (119 tests)
+npm test
+
+# Run tests with UI
+npm run test:ui
+
+# Run tests with coverage
+npm run test:coverage
+
 # TypeScript type check
 npm run build
 
@@ -224,9 +249,19 @@ MIT License - feel free to use this code for your own projects.
 
 ## Acknowledgments
 
-- Life expectancy data: [WHO Global Health Observatory](https://www.who.int/data/gho)
-- Inspiration: Countless life philosophy books and the fleeting nature of time
-- Built with: React, TypeScript, Vite, date-fns
+### Data Sources
+- **WHO (World Health Organization)**: Life expectancy data for 100+ countries
+  [WHO Global Health Observatory](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-life-expectancy-and-healthy-life-expectancy)
+
+- **The Health Inequality Project**: US income-based life expectancy research
+  Chetty, R., Stepner, M., Abraham, S., et al. (2016). "The Association Between Income and Life Expectancy in the United States, 2001-2014." *JAMA*, 2016. DOI: 10.1001/jama.2016.4226
+  [healthinequality.org](https://healthinequality.org)
+
+### Inspiration
+- Countless life philosophy books and the fleeting nature of time
+
+### Built With
+- React 18, TypeScript 5, Vite 6, date-fns 4.1
 
 ## Author
 
